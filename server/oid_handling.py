@@ -1,4 +1,5 @@
 import logging
+from functools import wraps
 from flask import (
   g,
   session,
@@ -65,12 +66,14 @@ def after_login(response):
   user = User.query.filter_by(openid=uoid).first()
   if user:
     flash('Welcome back %s.' % (nick,))
+    session['openid'] = uoid
     g.user = user
-    return redirect(oid.get_next_url())
+    return redirect('/')
 
   user = User(name=nick, openid=uoid)
   db.session.add(user)
   db.session.commit()
+  session['openid'] = uoid
   g.user = user
   flash('Welcome %s. Thank you for trying us out!' % (nick,))
   return redirect('/')
@@ -80,3 +83,13 @@ def logout():
   session.pop('openid', None)
   flash('You have been signed out.')
   return redirect(login_url_fragment)
+
+
+def login_required(fn):
+  @wraps(fn)
+  def view(*args, **kwargs):
+    if not g.user:
+      flash('Please login.')
+      return redirect(login_url_fragment)
+    return fn(*args, **kwargs)
+  return view
