@@ -22,7 +22,7 @@ flask_settings = {'template_folder': template_dir}
 database_uri = 'EXPLODE!' if in_production else 'sqlite:////tmp/test.db'
 
 
-logging.config.dictConfig(log_config.config(logfilename))
+logging.config.dictConfig(log_config.config(logfilename, in_production))
 
 
 if not in_production:
