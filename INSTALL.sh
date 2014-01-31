@@ -12,5 +12,6 @@ pip install --no-index -f file://$BASKET_ROOT \
     Flask-SQLAlchemy \
     Flask-OpenID
 
+python ./server/init_db.py foo
 echo "Should be good to go.sh!"
 
