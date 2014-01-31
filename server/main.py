@@ -1,12 +1,12 @@
 import logging
 from flask import Flask, request, render_template, jsonify
-from settings import template_dir
+from settings import flask_settings
 
 
 log = logging.getLogger('todoer')
 
 
-app = Flask(__name__, template_folder=template_dir)
+app = Flask('todoer', **flask_settings)
 
 
 @app.route('/')

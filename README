@@ -16,8 +16,8 @@ a todo list management web application where:
 
 
 Additional:
-  log file rotation.
-
+  - log file rotation.
+  - arrange to NOT serve static assets in "production"..
 
   Using Basket:
 
