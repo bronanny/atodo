@@ -1,8 +1,8 @@
 import logging
 from flask import Flask, request, render_template
-from settings import flask_settings, configure_database
+from settings import flask_settings, configure_database, login_url_fragment
 from database import db
-from oid_handling import oid, before_request, login
+from oid_handling import oid, before_request, login, logout
 
 
 log = logging.getLogger('todoer')
@@ -21,7 +21,8 @@ def index():
   return render_template('index.html')
 
 
-app.route('/login', methods=['GET', 'POST'])(login)
+app.route(login_url_fragment, methods=['GET', 'POST'])(login)
+app.route('/logout')(logout)
 
 
 if __name__ == '__main__':

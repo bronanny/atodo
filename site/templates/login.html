@@ -19,10 +19,14 @@ function set_openid(openid, pr)
 </head>
 <body>
 <h1>Login</h1>
+{% for message in get_flashed_messages() %}
+  <p class=message>{{ message }}
+{% endfor %}
 <form action="/login" id="login" method="POST">
 <div>
 <h3>Login with OpenID</h3>
 <div>
+{% if error %}<p class=error><strong>Error:</strong> {{ error }}</p>{% endif %}
 <a href="javascript:set_openid('https://www.google.com/accounts/o8/id', 'Google');">Google</a>
  | <a href="javascript:set_openid('https://me.yahoo.com', 'Yahoo');">Yahoo</a>
  | <a href="javascript:set_openid('http://openid.aol.com/[username]', 'AOL');">AOL</a>
@@ -31,6 +35,7 @@ function set_openid(openid, pr)
 </div>
 OpenID: <input id="openid" name="openid" size="30" type="text">
 <input type="submit" value="Sign in">
+<input type=hidden name=next value="{{ next }}">
 </div>
 </form>
 </body>

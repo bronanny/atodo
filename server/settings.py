@@ -20,6 +20,7 @@ static_dir = os.path.join(install_dir, 'site', 'static')
 flask_settings = {'template_folder': template_dir}
 database_uri = 'EXPLODE!' if in_production else 'sqlite:////tmp/test.db'
 openid_store = 'EXPLODE!' if in_production else '/tmp/oid.store'
+login_url_fragment = '/login'
 
 
 logging.config.dictConfig(log_config.config(logfilename, in_production))

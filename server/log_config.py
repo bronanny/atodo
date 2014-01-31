@@ -33,6 +33,10 @@ def config(logfilename, in_production):
       'level': logging.DEBUG,
       'handlers': ['console', 'disk'],
       },
+    'OpenID': {
+      'level': logging.DEBUG,
+      'handlers': ['console', 'disk'],
+      },
     },
   }
 
