@@ -17,3 +17,15 @@ a todo list management web application where:
 
 Additional:
   log file rotation.
+
+
+  Using Basket:
+
+    Set an environment variable to point to the dependencies dir.
+    $ export BASKET_ROOT=<Install-directory>/dependencies
+
+    Then you can use Pip to install the dependecies from that dir.
+    $ pip install --no-index -f file://$BASKET_ROOT <package>
+
+    It is recommended to use virtualenv. The .gitignore has a pattern for
+    <Install-directory>/venv
