@@ -18,6 +18,7 @@ a todo list management web application where:
 Additional:
   - log file rotation.
   - arrange to NOT serve static assets in "production"..
+    TODO: CDN for JS
 
   Using Basket:
 

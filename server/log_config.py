@@ -1,8 +1,8 @@
 import sys, logging
-from settings import logfilename
 
 
-config = {
+def config(logfilename):
+  return {
   'version': 1, # Logging config schema, nothing to do with us.
 
   'formatters': {
@@ -35,6 +35,5 @@ config = {
 
 if __name__ == '__main__':
   import logging.config
-  logging.config.dictConfig(config)
-  log = logging.getLogger('todoer')
-  log.error('cats!')
+  logging.config.dictConfig(config('/tmp/todoer.log'))
+  logging.getLogger('todoer').error('cats!')

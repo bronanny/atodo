@@ -15,8 +15,5 @@ def index():
 
 
 if __name__ == '__main__':
-  import logging.config
-  import log_config
-  logging.config.dictConfig(log_config.config)
   app.debug = True
   app.run(host='0.0.0.0')
