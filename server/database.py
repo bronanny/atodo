@@ -15,17 +15,18 @@ class User(db.Model):
 
   id = db.Column(db.Integer, db.Sequence('user_id_seq'), primary_key=True)
   name = db.Column(db.String(50))
-  password = db.Column(db.String(12))
+  openid = db.Column(db.String(200))
 ##  tz = db.Column(db.TZ())
   todos = db.relationship(
     "ToDo",
     order_by="desc(ToDo.priority)",
     primaryjoin="ToDo.user_id==User.id",
     )
-  def __init__(self, name, password):
+
+  def __init__(self, name, openid):
     log.debug('Creating user %r', name)
     self.name = name
-    self.password = password
+    self.openid = openid
 
   def __repr__(self):
     return "<User(%r)>" % (self.name)

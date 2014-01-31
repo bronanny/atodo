@@ -19,8 +19,8 @@ class TestTest(unittest.TestCase):
   def tearDown(self):
     pass
 
-  def create_user(self, name='ed', password='apassword'):
-    u = User(name, password)
+  def create_user(self, name='ed', openid='oooiiidddddddd'):
+    u = User(name, openid)
     db.session.add(u)
     db.session.commit()
     return u

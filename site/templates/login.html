@@ -1,0 +1,37 @@
+<html>
+<head>
+<title>ToDo Login</title>
+<meta charset="utf-8"></meta>
+<link href="static/css/site.css" rel="stylesheet">
+<script type="text/javascript">
+function set_openid(openid, pr)
+{
+    u = openid.indexOf('[username]');
+    if (u != -1) {
+        /* openid requires username */
+        user = prompt('Enter your ' + pr + ' username:');
+        openid = openid.substr(0, u) + user;
+    }
+    form = document.forms['login'];
+    form.elements['openid'].value = openid;
+}
+</script>
+</head>
+<body>
+<h1>Login</h1>
+<form action="/login" id="login" method="POST">
+<div>
+<h3>Login with OpenID</h3>
+<div>
+<a href="javascript:set_openid('https://www.google.com/accounts/o8/id', 'Google');">Google</a>
+ | <a href="javascript:set_openid('https://me.yahoo.com', 'Yahoo');">Yahoo</a>
+ | <a href="javascript:set_openid('http://openid.aol.com/[username]', 'AOL');">AOL</a>
+ | <a href="javascript:set_openid('http://www.flickr.com/[username]', 'Flickr');">Flickr</a>
+ | <a href="javascript:set_openid('https://www.myopenid.com', 'MyOpenID');">MyOpenID</a>
+</div>
+OpenID: <input id="openid" name="openid" size="30" type="text">
+<input type="submit" value="Sign in">
+</div>
+</form>
+</body>
+</html>

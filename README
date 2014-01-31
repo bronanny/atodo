@@ -22,6 +22,10 @@ Additional:
     TODO: CDN for JS
   - Arrange for a REAL (not SQLite) db in "production"..
 
+  For "production" there should be a file INSTALL_DIR/sekrit that contains
+  a single line with the app "secret" in it.  There is a better way to do
+  this.
+
   Using Basket:
 
     Set an environment variable to point to the dependencies dir.
