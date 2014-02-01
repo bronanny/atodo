@@ -26,6 +26,12 @@ Additional:
   a single line with the app "secret" in it.  There is a better way to do
   this.
 
+  If running not in production and there's no connection available
+  (because your neighbors watch videos all night on the shared wifi) you
+  can set an env var NO_CONN to any non-empty string to bypass OpenID
+  login.  You'll be automatically logged in (as the 'Simon Forman' user)
+  by visiting the '/login' URL.
+
   Using Basket:
 
     Set an environment variable to point to the dependencies dir.

@@ -12,6 +12,10 @@ import log_config
 
 
 in_production = 'sforman' not in install_dir # FIXME
+no_connection = bool(os.environ.get('NO_CONN'))
+if in_production and no_connection:
+  print >> sys.stderr, 'In production with no connection!? NO_CONN set.'
+  sys.exit(1)
 
 
 logfilename = '/var/log/todoer.log' if in_production else '/tmp/todoer.log'

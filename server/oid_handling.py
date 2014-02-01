@@ -9,7 +9,12 @@ from flask import (
   redirect,
   )
 from flask.ext.openid import OpenID
-from settings import openid_store, login_url_fragment
+from settings import (
+  openid_store,
+  login_url_fragment,
+  in_production,
+  no_connection,
+  )
 from database import db, User
 
 
@@ -35,6 +40,15 @@ def login():
 
   if g.user:
     return redirect(oid.get_next_url())
+
+  if not in_production and no_connection:
+    log.warning('NO_CONN set. Neglecting actual OpenID login.')
+    user = User.query.filter_by(name='Simon Forman').first()
+    if not user:
+      raise RuntimeError('Create the default test user!')
+    flash('Neglecting actual OpenID login: no connection.')
+    session['openid'] = user.openid
+    return redirect('/')
 
   if request.method == 'GET':
     return render_template(
@@ -82,7 +96,7 @@ def after_login(response):
 def logout():
   session.pop('openid', None)
   flash('You have been signed out.')
-  return redirect(login_url_fragment)
+  return redirect('/bork' if no_connection else login_url_fragment)
 
 
 def login_required(fn):
@@ -90,6 +104,6 @@ def login_required(fn):
   def view(*args, **kwargs):
     if not g.user:
       flash('Please login.')
-      return redirect(login_url_fragment)
+      return redirect('/carc' if no_connection else login_url_fragment)
     return fn(*args, **kwargs)
   return view
