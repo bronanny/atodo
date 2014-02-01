@@ -7,6 +7,7 @@ from flask import (
   render_template,
   flash,
   redirect,
+  abort,
   )
 from flask.ext.openid import OpenID
 from settings import (
@@ -58,7 +59,9 @@ def login():
       )
 
   if request.method != 'POST':
-    return redirect(login_url_fragment)
+    # Flask should prevent this, due to specifying the methods in the
+    # route in main.py, but let's be cautious.
+    abort(405) # METHOD NOT ALLOWED
 
   openid = request.form.get('openid')
   if openid:
@@ -105,5 +108,15 @@ def login_required(fn):
     if not g.user:
       flash('Please login.')
       return redirect('/carc' if no_connection else login_url_fragment)
+    return fn(*args, **kwargs)
+  return view
+
+
+def guard(fn):
+  @wraps(fn)
+  def view(*args, **kwargs):
+    if not g.user:
+      abort(406) # NOT ACCEPTABLE
+                 # FIXME: Is there a more proper error code for this?
     return fn(*args, **kwargs)
   return view
