@@ -8,6 +8,13 @@
 <script type="text/javascript">{{uslib}}</script>
 <script type="text/javascript">{{zplib}}</script>
 <script type="text/javascript">
+
+
+var ViewModel = {
+  username: "{{ username }}",
+}
+
+
 function doit() {
   $.ajax({
     url: '/todos',
@@ -24,6 +31,7 @@ function doit() {
 }
 
 $(document).ready(function(){
+  ko.applyBindings(ViewModel);
   $('#todos').click(doit);
 });
 
@@ -31,6 +39,7 @@ $(document).ready(function(){
 </head>
 <body>
  <h1>Hello World!</h1>
+ <h3>Welcome <span data-bind="text: username"></span></h3>
 {% for message in get_flashed_messages() %}
   <p class=message>{{ message }}
 {% endfor %}

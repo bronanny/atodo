@@ -1,5 +1,5 @@
 import logging
-from flask import Flask, render_template, Markup
+from flask import Flask, render_template, Markup, g
 from settings import (
   flask_settings,
   configure_database,
@@ -34,6 +34,7 @@ app.before_request(before_request)
 def index():
   return render_template(
     'index.html',
+    username=g.user.name,
     kolib=Markup(kolib),
     uslib=Markup(uslib),
     zplib=Markup(zplib),
