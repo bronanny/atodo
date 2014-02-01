@@ -47,3 +47,11 @@ def configure_database(app, db):
   app.config['SQLALCHEMY_POOL_RECYCLE'] = 60 * 60 # Once an hour.
   db.init_app(app)
 
+
+kolib = open(os.path.join(
+  install_dir,
+  'site',
+  'static',
+  'js',
+  'knockout.js',
+  )).read()
