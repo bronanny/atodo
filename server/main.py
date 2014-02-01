@@ -5,6 +5,8 @@ from settings import (
   configure_database,
   login_url_fragment,
   kolib,
+  uslib,
+  zplib,
   )
 from database import db
 from oid_handling import (
@@ -30,7 +32,12 @@ app.before_request(before_request)
 @app.route('/')
 @login_required
 def index():
-  return render_template('index.html', kolib=Markup(kolib))
+  return render_template(
+    'index.html',
+    kolib=Markup(kolib),
+    uslib=Markup(uslib),
+    zplib=Markup(zplib),
+    )
 
 
 app.route(login_url_fragment, methods=['GET', 'POST'])(login)
