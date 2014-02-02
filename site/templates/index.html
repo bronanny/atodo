@@ -25,7 +25,7 @@ var ViewModel = {
   },
 
   next_id: function () {
-    return this.todos().length;
+    return _.max(this.todos(), function(td){ return td.ID; });
   },
 
   sort_by_priority: function (d) {
