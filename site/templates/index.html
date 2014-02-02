@@ -22,8 +22,11 @@ var ViewModel = {
     } else {
       this.todos.push(todo);
     }
-  }
+  },
 
+  next_id: function () {
+    return this.todos().length;
+  }
 }
 
 function doit(ID, body, priority) {
@@ -37,10 +40,18 @@ function doit(ID, body, priority) {
 }
 
 $(document).ready(function(){
+
   ko.applyBindings(ViewModel);
+
   $('#todos').click(function(){
     doit(23, 'neato', 2);
   });
+
+  $('form').submit(function(){
+    var o = _.indexBy($('form').serializeArray(), 'name');
+    doit(ViewModel.next_id(), o.body.value, o.priority.value)
+    return false;
+  })
 });
 
 </script>
@@ -52,9 +63,32 @@ $(document).ready(function(){
   <p class=message>{{ message }}
 {% endfor %}
 
+<div class="new_todo">
+  <form>
+    <label for="priority">priority</label>
+    <select id="priority" name="priority">
+      <option value="0">House afire!</option>
+      <option value="1">After some coffee.</option>
+      <option value="2">Todayish.</option>
+      <option value="3">Probably not.</option>
+    </select>
+    <br>
+    <label for="body">To-do:</label>
+    <textarea id="body" name="body"></textarea>
+    <br>
+    <input type="submit" value="do it"/>
+  </form>
+</div>
+
+
+
 <div data-bind="foreach: todos">
   <div class="todo_tile">
-    <p data-bind="text: priority"></p>
+    <p data-bind="visible: priority == 0">House afire!</p>
+    <p data-bind="visible: priority == 1">After some coffee.</p>
+    <p data-bind="visible: priority == 2">Todayish.</p>
+    <p data-bind="visible: priority == 3">Probably not.</p>
+    <p data-bind="visible: priority >= 4"><span data-bind="text: priority"</span></p>
     <p data-bind="text: body">The JS did not run...  Check the console.</p>
   </div>
 </div>
