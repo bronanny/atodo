@@ -32,6 +32,9 @@ Additional:
   login.  You'll be automatically logged in (as the 'Simon Forman' user)
   by visiting the '/login' URL.
 
+  Pycrypto is a dependency of Flask-OAuthlib that has to be gotten
+  separately (from the basket deps.)
+
   Using Basket:
 
     Set an environment variable to point to the dependencies dir.
