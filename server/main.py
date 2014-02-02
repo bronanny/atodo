@@ -1,4 +1,5 @@
 import logging
+from json import dumps
 from flask import Flask, render_template, Markup, g
 from settings import (
   flask_settings,
@@ -17,7 +18,7 @@ from oid_handling import (
   login_required,
   guard,
   )
-from todo import todos
+from todo import todos, todo
 
 
 log = logging.getLogger('todoer')
@@ -35,6 +36,7 @@ def index():
   return render_template(
     'index.html',
     username=g.user.name,
+    todos=dumps(g.user.get_jsoned_todos()),
     kolib=Markup(kolib),
     uslib=Markup(uslib),
     zplib=Markup(zplib),
@@ -46,6 +48,7 @@ app.route('/logout')(logout)
 
 
 app.route('/todos')(guard(todos))
+app.route('/todo/<ID>', methods=['GET', 'POST'])(guard(todo))
 
 
 if __name__ == '__main__':

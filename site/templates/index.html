@@ -10,29 +10,37 @@
 <script type="text/javascript">
 
 
+
 var ViewModel = {
   username: "{{ username }}",
+  todos: ko.observableArray({{ todos|safe }}),
+
+  recv_todo: function (todo) {
+    var td = _.findWhere(this.todos(), {ID: todo.ID});
+    if (!_.isUndefined(td)) {
+      this.todos.splice(this.todos.indexOf(td), 1, todo);
+    } else {
+      this.todos.push(todo);
+    }
+  }
+
 }
 
-
-function doit() {
-  $.ajax({
-    url: '/todos',
-    dataType: 'json',
-    timeout: 300,
-    success: function(data){
-      $('#todos').html('' + data);
-      console.log(data);
+function doit(ID, body, priority) {
+  $.post(
+    '/todo/' + ID,
+    {body: body, priority: priority},
+    function(data){
+      ViewModel.recv_todo(data['todo']);
     },
-    error: function(xhr, errtype){
-      alert(errtype);
-    }
-  });
+    "json");
 }
 
 $(document).ready(function(){
   ko.applyBindings(ViewModel);
-  $('#todos').click(doit);
+  $('#todos').click(function(){
+    doit(23, 'neato', 2);
+  });
 });
 
 </script>
@@ -43,6 +51,14 @@ $(document).ready(function(){
 {% for message in get_flashed_messages() %}
   <p class=message>{{ message }}
 {% endfor %}
+
+<div data-bind="foreach: todos">
+  <div class="todo_tile">
+    <p data-bind="text: priority"></p>
+    <p data-bind="text: body">The JS did not run...  Check the console.</p>
+  </div>
+</div>
+
 <a href="/logout">logout</a>
 <div id="todos">hey</div>
 </body>
