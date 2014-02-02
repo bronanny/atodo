@@ -9,8 +9,6 @@
 <script type="text/javascript">{{zplib}}</script>
 <script type="text/javascript">
 
-
-
 var ViewModel = {
   username: "{{ username }}",
   todos: ko.observableArray({{ todos|safe }}),
@@ -25,7 +23,8 @@ var ViewModel = {
   },
 
   next_id: function () {
-    return _.max(this.todos(), function(td){ return td.ID; });
+    if (!this.todos().length) { return 0; }
+    return 1 + _.max(this.todos(), function(td){ return td.ID; }).ID;
   },
 
   sort_by_priority: function (d) {
@@ -33,7 +32,6 @@ var ViewModel = {
      return left.priority == right.priority ? 0 : (left.priority < right.priority ? -d : d);
    });
   }
-
 
 }
 
@@ -56,7 +54,6 @@ $(document).ready(function(){
   $('#sort').click(function(){
     ViewModel.sort_by_priority(sort_direction);
     sort_direction = -sort_direction;
-    //doit(23, 'neato', 2);
   });
 
   $('form').submit(function(){
