@@ -1,8 +1,15 @@
 a todo list management web application where:
- - I can have my todo list displayed.
+ * I can have my todo list displayed.
  - I can manipulate my list (add/remove/modify entries).
+   * add
+   - remove
+   - modify
  - Assign priorities and due dates to the entries.
+   * priorities
+   - due dates
  - I can sort my entry lists using due date and priority.
+   * priorities
+   - due dates
  - I can mark an entry as completed.
  - Minimal UI/UX design is needed.
  - I need every client operation done using JavaScript, reloading the page
@@ -45,3 +52,4 @@ Additional:
 
     It is recommended to use virtualenv. The .gitignore has a pattern for
     <Install-directory>/venv
+

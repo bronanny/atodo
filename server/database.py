@@ -1,6 +1,6 @@
+import logging
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
-import logging
 
 
 log = logging.getLogger('db')
