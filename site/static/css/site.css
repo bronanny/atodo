@@ -23,4 +23,15 @@ div.todo_tile {
 div.todo_tile > p {
   padding: 2px;
   border-bottom: 1px solid gray;
+  margin: 0.18em;
 }
+
+#bar {
+}
+
+#sort {
+  cursor: pointer;
+  margin: 2px;
+}
+
+

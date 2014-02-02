@@ -26,7 +26,15 @@ var ViewModel = {
 
   next_id: function () {
     return this.todos().length;
+  },
+
+  sort_by_priority: function (d) {
+   this.todos.sort(function(left, right){
+     return left.priority == right.priority ? 0 : (left.priority < right.priority ? -d : d);
+   });
   }
+
+
 }
 
 function doit(ID, body, priority) {
@@ -43,8 +51,12 @@ $(document).ready(function(){
 
   ko.applyBindings(ViewModel);
 
-  $('#todos').click(function(){
-    doit(23, 'neato', 2);
+  var sort_direction = 1;
+
+  $('#sort').click(function(){
+    ViewModel.sort_by_priority(sort_direction);
+    sort_direction = -sort_direction;
+    //doit(23, 'neato', 2);
   });
 
   $('form').submit(function(){
@@ -59,9 +71,13 @@ $(document).ready(function(){
 <body>
  <h1>Hello World!</h1>
  <h3>Welcome <span data-bind="text: username"></span></h3>
+
+<div id="bar">
 {% for message in get_flashed_messages() %}
   <p class=message>{{ message }}
 {% endfor %}
+<a href="/logout">logout</a>
+</div>
 
 <div class="new_todo">
   <form>
@@ -80,7 +96,7 @@ $(document).ready(function(){
   </form>
 </div>
 
-
+<div id="sort">sort</div>
 
 <div data-bind="foreach: todos">
   <div class="todo_tile">
@@ -93,8 +109,6 @@ $(document).ready(function(){
   </div>
 </div>
 
-<a href="/logout">logout</a>
-<div id="todos">hey</div>
 </body>
 </html>
 
