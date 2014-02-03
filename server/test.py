@@ -1,6 +1,7 @@
 import os, unittest, tempfile
 import main
 from database import db, User
+from flask import session
 
 
 class TestTest(unittest.TestCase):
@@ -14,7 +15,8 @@ class TestTest(unittest.TestCase):
     main.app.test_request_context().push()
     db.drop_all()
     db.create_all()
-    self.app = main.app.test_client()
+##    self.app = main.app.test_client()
+##    print self.app.__class__
 
   def tearDown(self):
     pass
@@ -26,8 +28,9 @@ class TestTest(unittest.TestCase):
     return u
 
   def test_hello(self):
-    rv = self.app.get('/')
-    self.assertTrue('Hello World!' in rv.data)
+    with main.app.test_client() as c:
+      rv = c.get('/')
+      self.assertTrue('Hello World!' in rv.data)
 
   def test_create_user(self):
     ed = self.create_user()
@@ -36,11 +39,15 @@ class TestTest(unittest.TestCase):
     self.assertTrue(len(users) == 1)
 
   def test_api_get(self):
-    ed = self.create_user()
-    ed.post_todo('body', 0, 0)
-    rv = self.app.get('/api/todo/0')
-    print rv.data
-    self.assertTrue('Hello World!' in rv.data)
+    with main.app.test_client() as c:
+      with c.session_transaction() as sess:
+        ed = self.create_user()
+        sess['openid'] = ed.openid
+        print 'hmm', User.query.filter_by(openid=sess['openid']).first()
+        ed.post_todo('body', 0, 0)
+        rv = c.get('/api/todo/0')
+        print rv.data
+        self.assertTrue('Hello World!' in rv.data)
 
 
 if __name__ == '__main__':

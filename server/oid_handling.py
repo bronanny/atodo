@@ -116,7 +116,6 @@ def guard(fn):
   @wraps(fn)
   def view(*args, **kwargs):
     if not g.user:
-      abort(406) # NOT ACCEPTABLE
-                 # FIXME: Is there a more proper error code for this?
+      abort(401) # Unauthorized
     return fn(*args, **kwargs)
   return view
