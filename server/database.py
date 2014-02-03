@@ -54,15 +54,16 @@ class User(db.Model):
   def get_todo(self, ID):
     return ToDo.query.filter_by(user_id=self.id, id=ID).first()
 
-  def post_todo(self, body, priority, ID, due_date, due_tz):
+  def post_todo(self, body, priority, ID, due_date, due_tz, completed):
     td = self.get_todo(ID)
     if not td:
-      td = ToDo(ID, self.id, priority, body, due_date, due_tz)
+      td = ToDo(ID, self.id, priority, body, due_date, due_tz, completed)
     else:
       td.body = body
       td.priority = priority
       td.due_date = due_date
       td.due_tz = due_tz
+      td.completed = completed
     db.session.add(td)
     db.session.commit()
     return td
@@ -89,8 +90,9 @@ class ToDo(db.Model):
   due_date = db.Column(db.Integer)
   due_tz = db.Column(db.String(10))
   body = db.Column(db.String(1024))
+  completed = db.Column(db.Boolean())
 
-  def __init__(self, ID, user_id, priority, body, due_date, due_tz):
+  def __init__(self, ID, user_id, priority, body, due_date, due_tz, completed):
     log.debug('Creating ToDo %r', ID)
     self.id = ID
     self.user_id = user_id
@@ -98,6 +100,7 @@ class ToDo(db.Model):
     self.body = body
     self.due_date = due_date
     self.due_tz = due_tz
+    self.completed = completed
 
   def as_jsonish(self):
     return {
@@ -106,10 +109,11 @@ class ToDo(db.Model):
       'sync': True,
       'ID': self.id,
       'due_date': '%i %s' % (self.due_date, self.due_tz),
+      'completed': self.completed,
       }
 
   @classmethod
-  def validate_data(class_, body, priority, ID, due_date):
+  def validate_data(class_, body, priority, ID, due_date, completed):
     try: ID = int(ID)
     except (TypeError, ValueError):
       raise InvalidData('non-numeric todo ID.')

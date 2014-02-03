@@ -73,16 +73,34 @@ var ViewModel = {
     picker.setMoment(moment(todo.due_date, weird_data_format))
   },
 
-  send_todo: function (o) {
+  complete_todo: function (todo) {
+    this.send_todo(
+      todo.ID,
+      todo.body,
+      todo.priority,
+      todo.due_date,
+      true
+    )
+  },
+
+  send_todo_basic: function (ID, body, priority, date, completed) {
     ID = this.next_id()
     $.post(
       '/todo/' + ID,
-      {ID: ID,
-       body: o.body.value,
-       priority: o.priority.value,
-       due_date: o.date.value},
+      {ID: ID, body: body, priority: priority, 
+       due_date: date, completed: completed},
       function(data){ ViewModel.recv_todo(data.todo); },
       "json"
+    );
+  },
+
+  send_todo: function (o) {
+    this.send_todo_basic(
+      this.next_id(),
+      o.body.value,
+      o.priority.value,
+      o.date.value,
+      false // automatically set un-completed.
     );
   }
 
@@ -167,6 +185,7 @@ $(document).ready(function(){
     <p data-bind="visible: priority == 3">Probably not.</p>
     <button data-bind="click: $parent.delete_todo">X</button>
     <button data-bind="click: $parent.edit_todo">Edit</button>
+    <button data-bind="visible: !completed ; click: $parent.complete_todo">Mark Completed</button>
     <p data-bind="text: body">The JS did not run...  Check the console.</p>
     <p data-bind="text: due_date"></p>
   </div>
