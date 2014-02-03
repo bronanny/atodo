@@ -17,7 +17,7 @@ var ViewModel = {
   todos: ko.observableArray({{ todos|safe }}),
 
   recv_todo: function (todo) {
-    var td = _.findWhere(this.todos(), {ID: todo.ID});
+    var td = this.todo_from_ID(todo.ID);
     if (!_.isUndefined(td)) {
       this.todos.splice(this.todos.indexOf(td), 1, todo);
     } else {
@@ -34,6 +34,21 @@ var ViewModel = {
    this.todos.sort(function(left, right){
      return left.priority == right.priority ? 0 : (left.priority < right.priority ? -d : d);
    });
+  },
+
+  todo_from_ID: function (ID) {
+    return _.findWhere(this.todos(), {ID: ID});
+  },
+
+  delete_todo: function (todo) {
+    $.ajax({
+      type: 'DELETE',
+      url: '/api/todo/' + todo.ID,
+      success: function(){ ViewModel.todos.remove(todo); },
+      error: function(xhr, type){
+        alert(type)
+      }
+    })
   }
 
 }
@@ -128,6 +143,7 @@ $(document).ready(function(){
     <p data-bind="visible: priority == 1">After some coffee.</p>
     <p data-bind="visible: priority == 2">Todayish.</p>
     <p data-bind="visible: priority == 3">Probably not.</p>
+    <button data-bind="click: $parent.delete_todo">X</button>
     <p data-bind="text: body">The JS did not run...  Check the console.</p>
   </div>
 </div>

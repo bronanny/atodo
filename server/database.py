@@ -65,6 +65,14 @@ class User(db.Model):
     db.session.commit()
     return td
 
+  def del_todo(self, ID):
+    td = ToDo.query.filter_by(user_id=self.id, id=ID).first()
+    if td:
+      db.session.delete(td)
+      db.session.commit()
+      return True
+    return False
+
 
 class ToDo(db.Model):
 

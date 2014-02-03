@@ -19,12 +19,23 @@ class TodoAPI(Resource):
 
   def put(self, ID):
     if not g.user.get_todo(ID):
-      log.warning('unknown todo ID: %s for user: %s', ID, repr(user))
+      log.warning('unknown todo ID: %s for user: %s', ID, repr(g.user))
       abort(404)
     return PUT_or_POST_todo(ID, log)
 
   def post(self, ID):
     if g.user.get_todo(ID):
-      log.warning('already have todo ID: %s for user: %s', ID, repr(user))
+      log.warning('already have todo ID: %s for user: %s', ID, repr(g.user))
       abort(409)
     return PUT_or_POST_todo(ID, log)
+
+  def delete(self, ID):
+    try:
+      deleted = g.user.del_todo(ID):
+    except: # A lot can go wrong here.
+      log.exception('deleting todo ID: %s for user %s', ID, repr(g.user))
+      abort(500)
+    if not deleted
+      log.warning('unknown todo ID: %s for user: %s', ID, repr(g.user))
+      abort(404)
+    return 'deleted'
