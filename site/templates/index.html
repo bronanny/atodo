@@ -36,6 +36,12 @@ var ViewModel = {
    });
   },
 
+  sort_by_due_date: function (d) {
+   this.todos.sort(function(left, right){
+     return left.due_date == right.due_date ? 0 : (left.due_date < right.due_date ? -d : d);
+   });
+  },
+
   todo_from_ID: function (ID) {
     return _.findWhere(this.todos(), {ID: ID});
   },
@@ -53,10 +59,11 @@ var ViewModel = {
 
 }
 
-function doit(ID, body, priority) {
+function doit(ID, body, priority, due_date) {
   $.post(
     '/todo/' + ID,
-    {ID: ID, body: body, priority: priority},
+    {ID: ID, body: body, priority: priority,
+     due_date: due_date},
     function(data){
       ViewModel.recv_todo(data['todo']);
     },
@@ -70,27 +77,32 @@ $(document).ready(function(){
   ko.applyBindings(ViewModel);
 
   var sort_direction = 1;
+  var sortdd_direction = 1;
 
   $('#sort').click(function(){
     ViewModel.sort_by_priority(sort_direction);
     sort_direction = -sort_direction;
   });
 
+  $('#sortdd').click(function(){
+    ViewModel.sort_by_due_date(sortdd_direction);
+    sortdd_direction = -sortdd_direction;
+  });
+
   $('form').submit(function(){
     var o = _.indexBy($('form').serializeArray(), 'name');
-    doit(ViewModel.next_id(), o.body.value, o.priority.value)
+    doit(ViewModel.next_id(), o.body.value, o.priority.value, o.date.value)
     return false;
   });
 
   picker = new Pikaday({
     field: $('#datepicker')[0],
     onSelect: function() {
-        console.log(this.getMoment().format("dddd, MMMM Do YYYY"));
-        $('#date').val(this.getMoment().format("X ZZ YYYY-mm-dd"))
+      $('#date').val(this.getMoment().format("X ZZ"))
     },
     minDate: new Date(),
     maxDate: new Date('2024-12-31'),
-    yearRange: [2014,2024],
+    yearRange: [2014, 2024],
     format: "dddd, MMMM Do YYYY"
 /*
     onSelect: function() {
@@ -129,13 +141,14 @@ $(document).ready(function(){
     <textarea id="body" name="body"></textarea>
     <br>
     <input type="text" id="datepicker">
-    <input type="text" id="date">
+    <input type="text" id="date" name="date">
     <br>
     <input type="submit" value="do it"/>
   </form>
 </div>
 
-<div id="sort">sort</div>
+<div id="sort">priority</div>
+<div id="sortdd">due date</div>
 
 <div data-bind="foreach: todos">
   <div class="todo_tile">
@@ -145,6 +158,7 @@ $(document).ready(function(){
     <p data-bind="visible: priority == 3">Probably not.</p>
     <button data-bind="click: $parent.delete_todo">X</button>
     <p data-bind="text: body">The JS did not run...  Check the console.</p>
+    <p data-bind="text: due_date"></p>
   </div>
 </div>
 

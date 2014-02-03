@@ -31,11 +31,11 @@ class TodoAPI(Resource):
 
   def delete(self, ID):
     try:
-      deleted = g.user.del_todo(ID):
+      deleted = g.user.del_todo(ID)
     except: # A lot can go wrong here.
       log.exception('deleting todo ID: %s for user %s', ID, repr(g.user))
       abort(500)
-    if not deleted
+    if not deleted:
       log.warning('unknown todo ID: %s for user: %s', ID, repr(g.user))
       abort(404)
     return 'deleted'

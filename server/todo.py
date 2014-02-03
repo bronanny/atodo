@@ -46,12 +46,25 @@ def GET_todo(ID, log=log):
   return jsonify(todo=td.as_jsonish())
 
 
+def parse_due_date(date_string):
+  try:
+    epoch, timezone = date_string.split(None, 1)
+    try: epoch = int(epoch)
+    except (TypeError, ValueError):
+      raise InvalidData('Bad epoch! %r' % (epoch,))
+    return epoch, timezone
+  except:
+    log.exception()
+    abort(500)
+
+
 def todo_args_from_request():
   body = request.form.get('body')
   priority = request.form.get('priority')
   ID = request.form.get('ID')
+  due_date, due_tz = parse_due_date(request.form.get('due_date', ''))
   try:
-    ToDo.validate_data(body, priority, ID)
+    ToDo.validate_data(body, priority, ID, due_date)
   except InvalidData, err:
     log.error('Invalid FORM Data %s todo ID: %s for user %s', err, ID, repr(g.user))
     abort(err.code)

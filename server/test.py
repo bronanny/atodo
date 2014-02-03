@@ -44,7 +44,7 @@ class TestTest(unittest.TestCase):
         ed = self.create_user()
         sess['openid'] = ed.openid
         print 'hmm', User.query.filter_by(openid=sess['openid']).first()
-        ed.post_todo('body', 0, 0)
+        ed.post_todo('body', 0, 0, (23, '-0800'))
         rv = c.get('/api/todo/0')
         print rv.data
         self.assertTrue('Hello World!' in rv.data)
