@@ -29,7 +29,7 @@ div.todo_tile > p {
 #bar {
 }
 
-#sort {
+#sort, #sortdd {
   cursor: pointer;
   margin: 2px;
 }

@@ -1,9 +1,9 @@
 a todo list management web application where:
  * I can have my todo list displayed.
- - I can manipulate my list (add/remove/modify entries).
+ * I can manipulate my list (add/remove/modify entries).
    * add
    * remove
-   - modify
+   * modify
  * Assign priorities and due dates to the entries.
    * priorities
    * due dates

@@ -12,6 +12,9 @@
 <script type="text/javascript" src="/static/js/pikaday.js"></script>
 <script type="text/javascript">
 
+var weird_data_format = "X ZZ";
+var picker;
+
 var ViewModel = {
   username: "{{ username }}",
   todos: ko.observableArray({{ todos|safe }}),
@@ -25,21 +28,27 @@ var ViewModel = {
     }
   },
 
+  nid: NaN,
   next_id: function () {
     if (!this.todos().length) { return 0; }
-    return 1 + _.max(this.todos(), function(td){ return td.ID; }).ID;
+    if (_.isNaN(this.nid)) {
+      return 1 + _.max(this.todos(), function(td){ return td.ID; }).ID;
+    }
+    var nid = this.nid;
+    this.nid = NaN;
+    return nid
   },
 
   sort_by_priority: function (d) {
-   this.todos.sort(function(left, right){
-     return left.priority == right.priority ? 0 : (left.priority < right.priority ? -d : d);
-   });
+    this.todos.sort(function(left, right){
+      return left.priority == right.priority ? 0 : (left.priority < right.priority ? -d : d);
+    });
   },
 
   sort_by_due_date: function (d) {
-   this.todos.sort(function(left, right){
-     return left.due_date == right.due_date ? 0 : (left.due_date < right.due_date ? -d : d);
-   });
+    this.todos.sort(function(left, right){
+      return left.due_date == right.due_date ? 0 : (left.due_date < right.due_date ? -d : d);
+    });
   },
 
   todo_from_ID: function (ID) {
@@ -55,22 +64,29 @@ var ViewModel = {
         alert(type)
       }
     })
+  },
+
+  edit_todo: function (todo) {
+    ViewModel.nid = todo.ID;
+    $("#body").val(todo.body);
+    $("#priority").val(todo.priority);
+    picker.setMoment(moment(todo.due_date, weird_data_format))
+  },
+
+  send_todo: function (o) {
+    ID = this.next_id()
+    $.post(
+      '/todo/' + ID,
+      {ID: ID,
+       body: o.body.value,
+       priority: o.priority.value,
+       due_date: o.date.value},
+      function(data){ ViewModel.recv_todo(data.todo); },
+      "json"
+    );
   }
 
 }
-
-function doit(ID, body, priority, due_date) {
-  $.post(
-    '/todo/' + ID,
-    {ID: ID, body: body, priority: priority,
-     due_date: due_date},
-    function(data){
-      ViewModel.recv_todo(data['todo']);
-    },
-    "json");
-}
-
-var picker;
 
 $(document).ready(function(){
 
@@ -90,26 +106,19 @@ $(document).ready(function(){
   });
 
   $('form').submit(function(){
-    var o = _.indexBy($('form').serializeArray(), 'name');
-    doit(ViewModel.next_id(), o.body.value, o.priority.value, o.date.value)
+    ViewModel.send_todo(_.indexBy($('form').serializeArray(), 'name'))
     return false;
   });
 
   picker = new Pikaday({
     field: $('#datepicker')[0],
     onSelect: function() {
-      $('#date').val(this.getMoment().format("X ZZ"))
+      $('#date').val(this.getMoment().format(weird_data_format))
     },
     minDate: new Date(),
     maxDate: new Date('2024-12-31'),
     yearRange: [2014, 2024],
     format: "dddd, MMMM Do YYYY"
-/*
-    onSelect: function() {
-        var date = document.createTextNode(this.getMoment().format('Do MMMM YYYY') + ' ');
-        document.getElementById('selected').appendChild(date);
-    }
-*/
     });
 
 });
@@ -157,6 +166,7 @@ $(document).ready(function(){
     <p data-bind="visible: priority == 2">Todayish.</p>
     <p data-bind="visible: priority == 3">Probably not.</p>
     <button data-bind="click: $parent.delete_todo">X</button>
+    <button data-bind="click: $parent.edit_todo">Edit</button>
     <p data-bind="text: body">The JS did not run...  Check the console.</p>
     <p data-bind="text: due_date"></p>
   </div>
