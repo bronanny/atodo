@@ -55,7 +55,6 @@ class User(db.Model):
     return ToDo.query.filter_by(user_id=self.id, id=ID).first()
 
   def post_todo(self, body, priority, ID):
-    ToDo.validate_data(body, priority, ID)
     td = self.get_todo(ID)
     if not td:
       td = ToDo(ID, self.id, priority, body)
@@ -98,6 +97,9 @@ class ToDo(db.Model):
 
   @classmethod
   def validate_data(class_, body, priority, ID):
+    try: ID = int(ID)
+    except (TypeError, ValueError):
+      raise InvalidData('non-numeric todo ID.')
+
     if False: # FIXME: validate incoming data
       raise InvalidData()
-

@@ -19,6 +19,7 @@ from oid_handling import (
   guard,
   )
 from todo import todos, todo
+from api import configure_api
 
 
 log = logging.getLogger('todoer')
@@ -28,6 +29,7 @@ app = Flask('todoer', **flask_settings)
 configure_database(app, db)
 oid.init_app(app)
 app.before_request(before_request)
+configure_api(app)
 
 
 @app.route('/')

@@ -13,7 +13,7 @@ div.new_todo {
 
 div.todo_tile {
   padding: 0.618em;
-  border: 2px dashed purple;
+  border: 1px dashed purple;
   margin-left: 0.618em;
   margin-right: 0.618em;
   margin-top: 0.2em;

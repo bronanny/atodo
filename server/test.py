@@ -35,6 +35,13 @@ class TestTest(unittest.TestCase):
     self.assertTrue(ed in users)
     self.assertTrue(len(users) == 1)
 
+  def test_api_get(self):
+    ed = self.create_user()
+    ed.post_todo('body', 0, 0)
+    rv = self.app.get('/api/todo/0')
+    print rv.data
+    self.assertTrue('Hello World!' in rv.data)
+
 
 if __name__ == '__main__':
     unittest.main()

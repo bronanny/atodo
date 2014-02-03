@@ -1,6 +1,6 @@
 import logging
 from flask import g, jsonify, request, abort
-from database import InvalidData
+from database import ToDo, InvalidData
 
 
 log = logging.getLogger('todoer')
@@ -12,34 +12,47 @@ def todos():
 
 
 def todo(ID):
-  try:
-    ID = int(ID)
-  except ValueError:
-    log.error('non-numeric todo ID: %r', ID)
-    abort(404)
-
   if request.method == 'GET':
-    td = g.user.get_todo(ID)
-    if not td:
-      log.warning('unknown todo ID: %s', ID)
-      abort(404)
-    log.debug('todo ID: %s', ID)
-    return jsonify(todo=td.as_jsonish())
-
+    return GET_todo(ID)
   assert request.method == 'POST', repr(request.method)
+  return PUT_or_POST_todo(ID)
 
-  log.debug('posting todo ID: %s for user %s', ID, repr(g.user))
-  try:
-    result = g.user.post_todo(
-      body=request.form.get('body'),
-      priority=request.form.get('priority'),
-      ID=ID,
-      )
-  except InvalidData, err:
-    log.error('posting todo ID: %s for user %s', ID, repr(g.user))
-    abort(err.code)
-  except:
-    log.exception('posting todo ID: %s for user %s', ID, repr(g.user))
+
+def PUT_or_POST_todo(ID, log=log):
+  args = todo_args_from_request()
+  if args['ID'] != ID:
+    log.error('ID %r not equal ID %r', args['ID'], ID)
     abort(500)
-
+  log.debug('setting todo ID: %s for user %s', ID, repr(g.user))
+  try:
+    result = g.user.post_todo(**args)
+  except: # A lot can go wrong here.
+    log.exception('setting todo ID: %s for user %s', ID, repr(g.user))
+    abort(500)
   return jsonify(todo=result.as_jsonish())
+
+
+def GET_todo(ID, log=log):
+  try: ID = int(ID)
+  except ValueError:
+    log.error('non-numeric todo ID: %r for user: %s', ID, repr(g.user))
+    abort(404)
+  log.debug('getting todo ID: %s for user %s', ID, repr(g.user))
+  td = g.user.get_todo(ID)
+  if not td:
+    log.warning('unknown todo ID: %s for user: %s', ID, repr(g.user))
+    abort(404)
+  log.debug('got todo ID: %s for user: %s', ID, repr(g.user))
+  return jsonify(todo=td.as_jsonish())
+
+
+def todo_args_from_request():
+  body = request.form.get('body')
+  priority = request.form.get('priority')
+  ID = request.form.get('ID')
+  try:
+    ToDo.validate_data(body, priority, ID)
+  except InvalidData, err:
+    log.error('Invalid FORM Data %s todo ID: %s for user %s', err, ID, repr(g.user))
+    abort(err.code)
+  return locals()

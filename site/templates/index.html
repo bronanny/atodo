@@ -4,9 +4,12 @@
 <title>To-Doer</title>
 <meta charset="utf-8" />
 <link rel="stylesheet" href="/static/css/site.css" type="text/css" />
+<link rel="stylesheet" href="/static/css/pikaday.css">
 <script type="text/javascript">{{kolib}}</script>
 <script type="text/javascript">{{uslib}}</script>
 <script type="text/javascript">{{zplib}}</script>
+<script type="text/javascript" src="/static/js/moment.js"></script>
+<script type="text/javascript" src="/static/js/pikaday.js"></script>
 <script type="text/javascript">
 
 var ViewModel = {
@@ -38,12 +41,14 @@ var ViewModel = {
 function doit(ID, body, priority) {
   $.post(
     '/todo/' + ID,
-    {body: body, priority: priority},
+    {ID: ID, body: body, priority: priority},
     function(data){
       ViewModel.recv_todo(data['todo']);
     },
     "json");
 }
+
+var picker;
 
 $(document).ready(function(){
 
@@ -60,7 +65,26 @@ $(document).ready(function(){
     var o = _.indexBy($('form').serializeArray(), 'name');
     doit(ViewModel.next_id(), o.body.value, o.priority.value)
     return false;
-  })
+  });
+
+  picker = new Pikaday({
+    field: $('#datepicker')[0],
+    onSelect: function() {
+        console.log(this.getMoment().format("dddd, MMMM Do YYYY"));
+        $('#date').val(this.getMoment().format("X ZZ YYYY-mm-dd"))
+    },
+    minDate: new Date(),
+    maxDate: new Date('2024-12-31'),
+    yearRange: [2014,2024],
+    format: "dddd, MMMM Do YYYY"
+/*
+    onSelect: function() {
+        var date = document.createTextNode(this.getMoment().format('Do MMMM YYYY') + ' ');
+        document.getElementById('selected').appendChild(date);
+    }
+*/
+    });
+
 });
 
 </script>
@@ -89,6 +113,9 @@ $(document).ready(function(){
     <label for="body">To-do:</label>
     <textarea id="body" name="body"></textarea>
     <br>
+    <input type="text" id="datepicker">
+    <input type="text" id="date">
+    <br>
     <input type="submit" value="do it"/>
   </form>
 </div>
@@ -101,7 +128,6 @@ $(document).ready(function(){
     <p data-bind="visible: priority == 1">After some coffee.</p>
     <p data-bind="visible: priority == 2">Todayish.</p>
     <p data-bind="visible: priority == 3">Probably not.</p>
-    <p data-bind="visible: priority >= 4"><span data-bind="text: priority"</span></p>
     <p data-bind="text: body">The JS did not run...  Check the console.</p>
   </div>
 </div>
