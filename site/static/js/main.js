@@ -90,8 +90,8 @@ var ViewModel = {
     );
   },
 
-  submit_todo: function () {
-    var o = _.indexBy($('form').serializeArray(), 'name');
+  submit_todo: function (form) {
+    var o = _.indexBy($(form).serializeArray(), 'name');
     this.send_todo_basic(
       this.next_id(),
       o.body.value,
