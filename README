@@ -10,7 +10,8 @@ a todo list management web application where:
  * I can sort my entry list using due date and priority.
    * priorities
    * due dates
- - I can mark an entry as completed.
+ * I can mark an entry as completed.
+   * un-set completed (by using the edit form.)
  * Minimal UI/UX design is needed.
  * I need every client operation done using JavaScript, reloading the page
    is not an option.
@@ -40,9 +41,6 @@ Additional:
   can set an env var NO_CONN to any non-empty string to bypass OpenID
   login.  You'll be automatically logged in (as the 'Simon Forman' user)
   by visiting the '/login' URL.
-
-  Pycrypto is a dependency of Flask-OAuthlib that has to be gotten
-  separately (from the basket deps.)
 
   Using Basket:
 
