@@ -1,7 +1,7 @@
 import logging
 from flask import g, jsonify, request, abort
 from flask.ext.restful import Resource, Api
-from todo import GET_todo, PUT_or_POST_todo
+from todo import todos, GET_todo, PUT_or_POST_todo
 
 
 log = logging.getLogger('api')
@@ -9,7 +9,13 @@ log = logging.getLogger('api')
 
 def configure_api(app, api_url='/api'):
   api = Api(app)
+  api.add_resource(TodoAllAPI, api_url + '/todos')
   api.add_resource(TodoAPI, api_url + '/todo/<int:ID>')
+
+
+class TodoAllAPI(Resource):
+  def get(self):
+    return todos(log)
 
 
 class TodoAPI(Resource):

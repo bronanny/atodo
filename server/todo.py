@@ -6,7 +6,7 @@ from database import ToDo, InvalidData
 log = logging.getLogger('todoer')
 
 
-def todos():
+def todos(log=log):
   log.debug('Fetching todos for %s', repr(g.user))
   return jsonify(todos=g.user.get_jsoned_todos())
 
