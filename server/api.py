@@ -1,7 +1,7 @@
 import logging
 from flask import g, jsonify, request, abort
 from flask.ext.restful import Resource, Api
-from todo import GET_todo, PUT_or_POST_todo, todo_args_from_request
+from todo import GET_todo, PUT_or_POST_todo
 
 
 log = logging.getLogger('api')

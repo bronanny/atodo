@@ -25,11 +25,10 @@ def PUT_or_POST_todo(ID, log=log):
     abort(500)
   log.debug('setting todo ID: %s for user %s', ID, repr(g.user))
   try:
-    result = g.user.post_todo(**args)
+    return jsonify(todo=g.user.post_todo(**args).as_jsonish())
   except: # A lot can go wrong here.
     log.exception('setting todo ID: %s for user %s', ID, repr(g.user))
     abort(500)
-  return jsonify(todo=result.as_jsonish())
 
 
 def GET_todo(ID, log=log):

@@ -33,20 +33,7 @@ class User(db.Model):
     self.openid = openid
 
   def __repr__(self):
-    return "<User(%r)>" % (self.name)
-
-  def is_authenticated(self):
-    return True
-
-  def is_active(self):
-    return True
-
-  def is_anonymous(self):
-    return False
-
-  def get_id(self):
-    assert self.id is not None
-    return unicode(self.id)
+    return "<User(%r)>" % (self.name,)
 
   def get_jsoned_todos(self):
     return [todo.as_jsonish() for todo in self.todos]
