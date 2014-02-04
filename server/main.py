@@ -38,7 +38,6 @@ def index():
   return render_template(
     'index.html',
     username=g.user.name,
-    todos=dumps(g.user.get_jsoned_todos()),
     kolib=Markup(kolib),
     uslib=Markup(uslib),
     zplib=Markup(zplib),
