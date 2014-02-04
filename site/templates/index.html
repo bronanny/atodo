@@ -18,6 +18,7 @@ var picker;
 var ViewModel = {
   username: "{{ username }}",
   todos: ko.observableArray({{ todos|safe }}),
+  loading: ko.observable(false),
 
   recv_todo: function (todo) {
     var td = this.todo_from_ID(todo.ID);
@@ -138,6 +139,9 @@ $(document).ready(function(){
     format: "dddd, MMMM Do YYYY"
     });
 
+  $(document).on('ajaxBeforeSend', function(){ ViewModel.loading(true); })
+  $(document).on('ajaxComplete', function(){ ViewModel.loading(false); })
+
 });
 
 </script>
@@ -172,6 +176,8 @@ $(document).ready(function(){
     <input type="submit" value="do it"/>
   </form>
 </div>
+
+<div data-bind="visible: loading">Contacting to server...</div>
 
 <div id="sort">priority</div>
 <div id="sortdd">due date</div>
