@@ -1,13 +1,11 @@
 import logging
 from json import dumps
-from flask import Flask, render_template, Markup, g
+from flask import Flask, render_template, g
 from settings import (
   flask_settings,
   configure_database,
   login_url_fragment,
-  kolib,
-  uslib,
-  zplib,
+  js_source,
   )
 from database import db
 from oid_handling import (
@@ -37,10 +35,8 @@ configure_api(app)
 def index():
   return render_template(
     'index.html',
+    js_source=js_source,
     username=g.user.name,
-    kolib=Markup(kolib),
-    uslib=Markup(uslib),
-    zplib=Markup(zplib),
     )
 
 
