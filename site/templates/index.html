@@ -46,8 +46,8 @@
 
 <div>: <span data-bind="visible: loading">Contacting server...</span></div>
 
-<div id="sort">priority</div>
-<div id="sortdd">due date</div>
+<div id="sort" data-bind="click: sort_by_priority">priority</div>
+<div id="sortdd" data-bind="click: sort_by_due_date">due date</div>
 
 <div data-bind="foreach: todos">
   <div class="todo_tile">

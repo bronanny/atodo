@@ -27,16 +27,23 @@ var ViewModel = {
     return nid;
   },
 
-  sort_by_priority: function (d) {
+  sort_direction: 1,
+  sortdd_direction: 1,
+
+  sort_by: function (d, field) {
     this.todos.sort(function(left, right){
-      return left.priority == right.priority ? 0 : (left.priority < right.priority ? -d : d);
+      return left[field] == right[field] ? 0 : (left[field] < right[field] ? -d : d);
     });
   },
 
-  sort_by_due_date: function (d) {
-    this.todos.sort(function(left, right){
-      return left.due_date == right.due_date ? 0 : (left.due_date < right.due_date ? -d : d);
-    });
+  sort_by_priority: function () {
+    this.sort_direction = -this.sort_direction;
+    this.sort_by(this.sort_direction, 'priority');
+  },
+
+  sort_by_due_date: function () {
+    this.sortdd_direction = -this.sortdd_direction;
+    this.sort_by(this.sortdd_direction, 'due_date');
   },
 
   todo_from_ID: function (ID) {
@@ -94,19 +101,6 @@ var ViewModel = {
 $(document).ready(function(){
 
   ko.applyBindings(ViewModel);
-
-  var sort_direction = 1;
-  var sortdd_direction = 1;
-
-  $('#sort').click(function(){
-    ViewModel.sort_by_priority(sort_direction);
-    sort_direction = -sort_direction;
-  });
-
-  $('#sortdd').click(function(){
-    ViewModel.sort_by_due_date(sortdd_direction);
-    sortdd_direction = -sortdd_direction;
-  });
 
   $('form').submit(function(){
     ViewModel.send_todo(_.indexBy($('form').serializeArray(), 'name'));
