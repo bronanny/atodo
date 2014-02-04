@@ -24,7 +24,7 @@ var ViewModel = {
     }
     var nid = this.nid;
     this.nid = NaN;
-    return nid
+    return nid;
   },
 
   sort_by_priority: function (d) {
@@ -48,17 +48,15 @@ var ViewModel = {
       type: 'DELETE',
       url: '/api/todo/' + todo.ID,
       success: function(){ ViewModel.todos.remove(todo); },
-      error: function(xhr, type){
-        alert(type)
-      }
-    })
+      error: function(xhr, type){ alert(type); }
+    });
   },
 
   edit_todo: function (todo) {
     ViewModel.nid = todo.ID;
     $("#body").val(todo.body);
     $("#priority").val(todo.priority);
-    picker.setMoment(moment(todo.due_date, weird_data_format))
+    picker.setMoment(moment(todo.due_date, weird_data_format));
   },
 
   send_todo_basic: function (ID, body, priority, date, completed) {
@@ -78,7 +76,7 @@ var ViewModel = {
       todo.priority,
       todo.due_date,
       true
-    )
+    );
   },
 
   send_todo: function (o) {
@@ -91,7 +89,7 @@ var ViewModel = {
     );
   }
 
-}
+};
 
 $(document).ready(function(){
 
@@ -111,14 +109,14 @@ $(document).ready(function(){
   });
 
   $('form').submit(function(){
-    ViewModel.send_todo(_.indexBy($('form').serializeArray(), 'name'))
+    ViewModel.send_todo(_.indexBy($('form').serializeArray(), 'name'));
     return false;
   });
 
   picker = new Pikaday({
     field: $('#datepicker')[0],
     onSelect: function() {
-      $('#date').val(this.getMoment().format(weird_data_format))
+      $('#date').val(this.getMoment().format(weird_data_format));
     },
     minDate: new Date(),
     maxDate: new Date('2024-12-31'),
