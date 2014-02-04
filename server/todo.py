@@ -63,7 +63,7 @@ def todo_args_from_request():
   priority = request.form.get('priority')
   ID = request.form.get('ID')
   due_date, due_tz = parse_due_date(request.form.get('due_date', ''))
-  completed = request.form.get('completed')
+  completed = request.form.get('completed') == 'true'
   try:
     ToDo.validate_data(body, priority, ID, due_date, completed)
   except InvalidData, err:
