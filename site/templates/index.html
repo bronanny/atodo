@@ -74,7 +74,7 @@ var ViewModel = {
   },
 
   complete_todo: function (todo) {
-    this.send_todo(
+    this.send_todo_basic(
       todo.ID,
       todo.body,
       todo.priority,
@@ -84,7 +84,6 @@ var ViewModel = {
   },
 
   send_todo_basic: function (ID, body, priority, date, completed) {
-    ID = this.next_id()
     $.post(
       '/todo/' + ID,
       {ID: ID, body: body, priority: priority, 
