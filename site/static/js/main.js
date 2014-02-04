@@ -16,15 +16,19 @@ var ViewModel = {
     }
   },
 
-  nid: NaN,
+  nid: ko.observable(NaN),
   next_id: function () {
     if (!this.todos().length) { return 0; }
-    if (_.isNaN(this.nid)) {
+    if (_.isNaN(this.nid())) {
       return 1 + _.max(this.todos(), function(td){ return td.ID; }).ID;
     }
-    var nid = this.nid;
-    this.nid = NaN;
+    var nid = this.nid();
+    this.nid(NaN);
     return nid;
+  },
+
+  cancel_edit: function(){
+    this.nid(NaN);
   },
 
   sort_direction: 1,
@@ -60,7 +64,7 @@ var ViewModel = {
   },
 
   edit_todo: function (todo) {
-    ViewModel.nid = todo.ID;
+    ViewModel.nid(todo.ID);
     $("#body").val(todo.body);
     $("#priority").val(todo.priority);
     picker.setMoment(moment(todo.due_date, weird_data_format));
