@@ -26,7 +26,8 @@ div.todo_tile > p {
   margin: 0.18em;
 }
 
-#bar {
+.cmpl {
+  text-decoration: line-through;
 }
 
 #sort, #sortdd {

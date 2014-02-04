@@ -74,16 +74,6 @@ var ViewModel = {
     picker.setMoment(moment(todo.due_date, weird_data_format))
   },
 
-  complete_todo: function (todo) {
-    this.send_todo_basic(
-      todo.ID,
-      todo.body,
-      todo.priority,
-      todo.due_date,
-      true
-    )
-  },
-
   send_todo_basic: function (ID, body, priority, date, completed) {
     $.post(
       '/todo/' + ID,
@@ -92,6 +82,16 @@ var ViewModel = {
       function(data){ ViewModel.recv_todo(data.todo); },
       "json"
     );
+  },
+
+  complete_todo: function (todo) {
+    ViewModel.send_todo_basic(
+      todo.ID,
+      todo.body,
+      todo.priority,
+      todo.due_date,
+      true
+    )
   },
 
   send_todo: function (o) {
@@ -177,22 +177,25 @@ $(document).ready(function(){
   </form>
 </div>
 
-<div data-bind="visible: loading">Contacting to server...</div>
+<div>: <span data-bind="visible: loading">Contacting server...</span></div>
 
 <div id="sort">priority</div>
 <div id="sortdd">due date</div>
 
 <div data-bind="foreach: todos">
   <div class="todo_tile">
-    <p data-bind="visible: priority == 0">House afire!</p>
-    <p data-bind="visible: priority == 1">After some coffee.</p>
-    <p data-bind="visible: priority == 2">Todayish.</p>
-    <p data-bind="visible: priority == 3">Probably not.</p>
+    <span data-bind="text: due_date"></span>
     <button data-bind="click: $parent.delete_todo">X</button>
     <button data-bind="click: $parent.edit_todo">Edit</button>
-    <button data-bind="visible: !completed ; click: $parent.complete_todo">Mark Completed</button>
+    <span data-bind="visible: !completed">
+      <button data-bind="click: $parent.complete_todo">Mark Completed</button>
+    </span>
+    <span class="cmpl" data-bind="visible: completed">Completed!</span>
+    <span data-bind="visible: priority == 0">House afire!</span>
+    <span data-bind="visible: priority == 1">After some coffee.</span>
+    <span data-bind="visible: priority == 2">Todayish.</span>
+    <span data-bind="visible: priority == 3">Probably not.</span>
     <p data-bind="text: body">The JS did not run...  Check the console.</p>
-    <p data-bind="text: due_date"></p>
   </div>
 </div>
 
