@@ -90,7 +90,8 @@ var ViewModel = {
     );
   },
 
-  send_todo: function (o) {
+  submit_todo: function () {
+    var o = _.indexBy($('form').serializeArray(), 'name');
     this.send_todo_basic(
       this.next_id(),
       o.body.value,
@@ -106,11 +107,6 @@ $(document).ready(function(){
 
   ko.applyBindings(ViewModel);
 
-  $('form').submit(function(){
-    ViewModel.send_todo(_.indexBy($('form').serializeArray(), 'name'));
-    return false;
-  });
-
   picker = new Pikaday({
     field: $('#datepicker')[0],
     onSelect: function() {
@@ -123,7 +119,7 @@ $(document).ready(function(){
     });
 
   $(document).on('ajaxBeforeSend', function(){ ViewModel.loading(true); })
-  $(document).on('ajaxComplete', function(){ ViewModel.loading(false); })
+             .on('ajaxComplete', function(){ ViewModel.loading(false); });
 
   $.get('/todos', function(data){ ViewModel.todos(data.todos); });
 
