@@ -12,6 +12,7 @@ def todos(log=log):
 
 
 def todo(ID):
+  ID = intify_ID(ID)
   if request.method == 'GET':
     return GET_todo(ID)
   assert request.method == 'POST', repr(request.method)
@@ -32,10 +33,6 @@ def PUT_or_POST_todo(ID, log=log):
 
 
 def GET_todo(ID, log=log):
-  try: ID = int(ID)
-  except ValueError:
-    log.error('non-numeric todo ID: %r for user: %s', ID, repr(g.user))
-    abort(404)
   log.debug('getting todo ID: %s for user %s', ID, repr(g.user))
   td = g.user.get_todo(ID)
   if not td:
@@ -58,9 +55,9 @@ def parse_due_date(date_string):
 
 
 def todo_args_from_request():
+  ID = intify_ID(request.form.get('ID'))
   body = request.form.get('body')
   priority = request.form.get('priority')
-  ID = request.form.get('ID')
   due_date, due_tz = parse_due_date(request.form.get('due_date', ''))
   completed = request.form.get('completed') == 'true'
   try:
@@ -69,3 +66,10 @@ def todo_args_from_request():
     log.error('Invalid FORM Data %s todo ID: %s for user %s', err, ID, repr(g.user))
     abort(err.code)
   return locals()
+
+
+def intify_ID(ID):
+  try: return int(ID)
+  except (TypeError, ValueError):
+    log.error('non-numeric todo ID: %r for user: %s', ID, repr(g.user))
+    abort(404)
