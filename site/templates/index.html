@@ -38,7 +38,7 @@
     <textarea id="body" name="body"></textarea>
     <br>
     <input type="text" id="datepicker">
-    <input type="text" id="date" name="date">
+    <input type="text" id="date" name="date" style="display: none;">
     <br>
     <span data-bind="visible: _.isNaN(nid())">
       <input type="submit" value="do it"/>
@@ -57,7 +57,7 @@
 
 <div data-bind="foreach: todos">
   <div class="todo_tile">
-    <span data-bind="text: due_date"></span>
+    <span data-bind="text: $parent.render_date($data)"></span>
     <button data-bind="click: $parent.delete_todo">X</button>
     <button data-bind="click: $parent.edit_todo">Edit</button>
     <span data-bind="visible: !completed">

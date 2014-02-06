@@ -99,6 +99,10 @@ var ViewModel = {
       o.date.value,
       false // automatically set un-completed.
     );
+  },
+
+  render_date: function (todo) {
+    return moment(todo.due_date, weird_data_format).format("dddd, MMMM Do YYYY");
   }
 
 };
