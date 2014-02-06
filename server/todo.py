@@ -53,8 +53,8 @@ def parse_due_date(date_string):
       raise InvalidData('Bad epoch! %r' % (epoch,))
     return epoch, timezone
   except:
-    log.exception()
-    abort(500)
+    log.exception('I hate it')
+    abort(400)
 
 
 def todo_args_from_request():
