@@ -2,9 +2,14 @@ import logging
 from flask import g, jsonify, request, abort
 from flask.ext.restful import Resource, Api
 from todo import todos, GET_todo, PUT_or_POST_todo
+from oid_handling import guard
 
 
 log = logging.getLogger('api')
+
+
+class Resource(Resource):
+  method_decorators = [guard]
 
 
 def configure_api(app, api_url='/api'):
