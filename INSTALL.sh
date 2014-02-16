@@ -1,6 +1,9 @@
 # You should have virtualenv and pip already.
-
-virtualenv venv
+set -e
+cp ./dependencies/setuptools-0.6c11-py2.7.egg.noticemegit ./setuptools-0.6c11-py2.7.egg
+cp ./dependencies/pip-1.1.tar.gz .
+virtualenv --never-download venv
+rm -rf setuptools-0.6c11-py2.7.egg pip-1.1.tar.gz
 source ./venv/bin/activate
 
 export INSTALL_DIR=`pwd`
