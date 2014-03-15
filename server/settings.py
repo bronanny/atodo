@@ -11,7 +11,7 @@ import logging.config
 import log_config
 
 
-in_production = 'sforman' not in install_dir # FIXME
+in_production = os.path.exists(os.path.join(install_dir, 'production'))
 no_connection = bool(os.environ.get('NO_CONN'))
 if in_production and no_connection:
   print >> sys.stderr, 'In production with no connection!? NO_CONN set.'
@@ -37,7 +37,10 @@ if not in_production:
 else:
   fn = os.path.join(install_dir, 'sekrit')
   if not os.path.exists(fn):
-    print >> sys.stderr, 'There must exist INSTALL_DIR/sekrit!'
+    print >> sys.stderr, (
+      'not found: %r\n'
+      'There must exist INSTALL_DIR/sekrit!'
+      ) % (fn,)
     sys.exit(1)
   sekrit = open(fn).read().strip()
 
