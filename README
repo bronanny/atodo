@@ -27,14 +27,25 @@ a todo list management web application where:
 
 Additional:
   - log file rotation..
-  - the test for "in_production" in settings.py should be more robust..
   - arrange to NOT serve static assets in "production"..
     TODO: CDN for JS
   - Arrange for a REAL (not SQLite) db in "production"..
 
+Installation
+
+  Run the INSTALL.sh script.
+
+Running the development server
+
+  Set an environment variable INSTALL_DIR to the path to the directory
+  containing the code.  See go.sh for an example, or just run it.
+
+Notes
+
   For "production" there should be a file INSTALL_DIR/sekrit that contains
-  a single line with the app "secret" in it.  There is a better way to do
-  this.
+  a single line with the app "secret" in it.  There should also exist a
+  file INSTALL_DIR/production the presence of which signals that we're
+  running in production environment.
 
   If running not in production and there's no connection available
   (because your neighbors watch videos all night on the shared wifi) you
