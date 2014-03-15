@@ -1,5 +1,6 @@
 
-var weird_data_format = "X ZZ";
+var weird_date_format = "X ZZ";
+var date_format = "dddd, MMMM Do YYYY";
 var picker;
 
 var ViewModel = {
@@ -67,7 +68,7 @@ var ViewModel = {
     ViewModel.nid(todo.ID);
     $("#body").val(todo.body);
     $("#priority").val(todo.priority);
-    picker.setMoment(moment(todo.due_date, weird_data_format));
+    picker.setMoment(moment(todo.due_date, weird_date_format));
   },
 
   send_todo_basic: function (ID, body, priority, date, completed) {
@@ -102,7 +103,7 @@ var ViewModel = {
   },
 
   render_date: function (todo) {
-    return moment(todo.due_date, weird_data_format).format("dddd, MMMM Do YYYY");
+    return moment(todo.due_date, weird_date_format).format(date_format);
   }
 
 };
@@ -114,12 +115,12 @@ $(document).ready(function(){
   picker = new Pikaday({
     field: $('#datepicker')[0],
     onSelect: function() {
-      $('#date').val(this.getMoment().format(weird_data_format));
+      $('#date').val(this.getMoment().format(weird_date_format));
     },
     minDate: new Date(),
     maxDate: new Date('2024-12-31'),
     yearRange: [2014, 2024],
-    format: "dddd, MMMM Do YYYY"
+    format: date_format
     });
 
   $(document).on('ajaxBeforeSend', function(){ ViewModel.loading(true); })
